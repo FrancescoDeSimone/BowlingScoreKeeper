@@ -12,6 +12,8 @@ public class Game {
             throw new WrongGameNumberException("Incorrect frame size");
         if(frames.size() == 11 && (frames.get(10).get_throw_type() == Frame.FRAME_TYPE.NORMAL_THROW))
             throw new WrongGameNumberException("Incorrect type of throw");
+        if(frames.size() == 10 && (frames.get(9).get_throw_type() != Frame.FRAME_TYPE.NORMAL_THROW))
+            throw new WrongGameNumberException("Incorrect type of throw");
         this.frames = frames;
     }
 
@@ -20,12 +22,11 @@ public class Game {
         for (int i = 0 ; i < 10;i++)
             if (frames.get(i).is_strike())
                 score += frames.get(i).get_score() + frames.get(i+1).get_score()
-                        + (frames.get(i+1).is_strike() && (i<=8)?frames.get(i+2).first_throw():0);
+                        + (frames.get(i+1).is_strike()?frames.get(i+2).first_throw():0);
             else if (frames.get(i).is_spare())
                 score += frames.get(i).get_score() + frames.get(i+1).first_throw();
             else
                 score += frames.get(i).get_score();
-
         return score;
     }
 

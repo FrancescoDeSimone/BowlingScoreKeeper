@@ -296,6 +296,49 @@ public class GameTest {
     }
 
     @Test
+    public void testStrikeTwoStrikeAtTheEnd() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(4,1),
+                new Frame(1,1),
+                new Frame(5,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(9,1),
+                new Frame(10,0),
+                new Frame(10,0),
+                new Frame(7,2, Frame.FRAME_TYPE.STRIKE_BONUS)
+        ));
+        Game g = new Game(frame);
+        int score = g.game_score();
+        assertEquals(103,score);
+    }
+
+
+    @Test
+    public void testBonusIsAStrikeAfterStrike() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(4,1),
+                new Frame(1,1),
+                new Frame(5,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(9,1),
+                new Frame(7,2),
+                new Frame(10,0),
+                new Frame(10,0, Frame.FRAME_TYPE.STRIKE_BONUS)
+        ));
+        Game g = new Game(frame);
+        int score = g.game_score();
+        assertEquals(83,score);
+    }
+
+    @Test
     public void testStrikeInTheMiddle() throws WrongScoreException, WrongGameNumberException {
         ArrayList<Frame> frame = new ArrayList<>();
         frame.addAll(Arrays.asList(
@@ -316,7 +359,7 @@ public class GameTest {
     }
 
     @Test
-    public void testBonusIsAStrike() throws WrongScoreException, WrongGameNumberException {
+    public void testBonusIsAStrikeAfterSpare() throws WrongScoreException, WrongGameNumberException {
         ArrayList<Frame> frame = new ArrayList<>();
         frame.addAll(Arrays.asList(
                 new Frame(1,5),
@@ -369,7 +412,7 @@ public class GameTest {
                 new Frame(4,5),
                 new Frame(8,1),
                 new Frame(9,0),
-                new Frame(10,0, Frame.FRAME_TYPE.STRIKE_BONUS)
+                new Frame(10,1, Frame.FRAME_TYPE.STRIKE_BONUS)
         ));
         new Game(frame);
     }
@@ -406,6 +449,99 @@ public class GameTest {
                 new Frame(4,5),
                 new Frame(8,1),
                 new Frame(8,2)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testInvalidBonusAsNormalFrame() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(4,5),
+                new Frame(8,1),
+                new Frame(8,2),
+                new Frame(3,2)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testInvalidStrikeBonusPreempt() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(10,0),
+                new Frame(8,1, Frame.FRAME_TYPE.STRIKE_BONUS),
+                new Frame(8,2),
+                new Frame(3,2)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testInvalidStrikeBonusWithNoReason() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(4,5),
+                new Frame(10,0),
+                new Frame(8,2, Frame.FRAME_TYPE.STRIKE_BONUS)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testInvalidSpareBonusPreempt() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(9,1),
+                new Frame(9,0, Frame.FRAME_TYPE.SPARE_BONUS),
+                new Frame(8,2),
+                new Frame(3,2)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testInvalidSpareBonusWithNoReason() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(4,5),
+                new Frame(8,2),
+                new Frame(8,0, Frame.FRAME_TYPE.SPARE_BONUS)
         ));
         new Game(frame);
     }
