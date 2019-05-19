@@ -34,11 +34,11 @@ public class Frame {
     }
 
     public boolean is_strike(){
-        return first==10 && second == 0;
+        return first==10 && second == 0 && throw_type==FRAME_TYPE.NORMAL_THROW;
     }
 
     public boolean is_spare() {
-        return (first+second)==10;
+        return ((first+second)==10 && first!=10 && throw_type==FRAME_TYPE.NORMAL_THROW);
     }
 
     public FRAME_TYPE get_throw_type() {

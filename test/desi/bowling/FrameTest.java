@@ -33,7 +33,12 @@ public class FrameTest {
 
     @Test(expected = WrongScoreException.class)
     public void testSecondScoreWrong() throws WrongScoreException{
-        new Frame(1,-4);
+        new Frame(11,-1);
+    }
+
+    @Test(expected = WrongScoreException.class)
+    public void testBothScoreWrong() throws WrongScoreException{
+        new Frame(-11,-1);
     }
 
     @Test
@@ -89,6 +94,13 @@ public class FrameTest {
     @Test
     public void testIsNotSpare() throws WrongScoreException{
         Frame f = new Frame(0,1);
+        boolean strike = f.is_spare();
+        assertFalse(strike);
+    }
+
+    @Test
+    public void testIsNotSpare2() throws WrongScoreException{
+        Frame f = new Frame(10,0);
         boolean strike = f.is_spare();
         assertFalse(strike);
     }

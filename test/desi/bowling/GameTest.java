@@ -296,6 +296,49 @@ public class GameTest {
     }
 
     @Test
+    public void testStrikeTwoStrikeAtTheEnd() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(4,1),
+                new Frame(1,1),
+                new Frame(5,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(9,1),
+                new Frame(10,0),
+                new Frame(10,0),
+                new Frame(7,2, Frame.FRAME_TYPE.STRIKE_BONUS)
+        ));
+        Game g = new Game(frame);
+        int score = g.game_score();
+        assertEquals(103,score);
+    }
+
+
+    @Test
+    public void testBonusIsAStrikeAfterStrike() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(4,1),
+                new Frame(1,1),
+                new Frame(5,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(9,1),
+                new Frame(7,2),
+                new Frame(10,0),
+                new Frame(10,0, Frame.FRAME_TYPE.STRIKE_BONUS)
+        ));
+        Game g = new Game(frame);
+        int score = g.game_score();
+        assertEquals(83,score);
+    }
+
+    @Test
     public void testStrikeInTheMiddle() throws WrongScoreException, WrongGameNumberException {
         ArrayList<Frame> frame = new ArrayList<>();
         frame.addAll(Arrays.asList(
@@ -316,7 +359,7 @@ public class GameTest {
     }
 
     @Test
-    public void testBonusIsAStrike() throws WrongScoreException, WrongGameNumberException {
+    public void testBonusIsAStrikeAfterSpare() throws WrongScoreException, WrongGameNumberException {
         ArrayList<Frame> frame = new ArrayList<>();
         frame.addAll(Arrays.asList(
                 new Frame(1,5),

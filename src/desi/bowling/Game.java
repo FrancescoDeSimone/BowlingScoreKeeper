@@ -20,12 +20,11 @@ public class Game {
         for (int i = 0 ; i < 10;i++)
             if (frames.get(i).is_strike())
                 score += frames.get(i).get_score() + frames.get(i+1).get_score()
-                        + (frames.get(i+1).is_strike() && (i<=8)?frames.get(i+2).first_throw():0);
+                        + (frames.get(i+1).is_strike()?frames.get(i+2).first_throw():0);
             else if (frames.get(i).is_spare())
                 score += frames.get(i).get_score() + frames.get(i+1).first_throw();
             else
                 score += frames.get(i).get_score();
-
         return score;
     }
 
