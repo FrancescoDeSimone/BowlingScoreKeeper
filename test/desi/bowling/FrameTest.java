@@ -94,9 +94,54 @@ public class FrameTest {
     }
 
     @Test
-    public void testLastFrame() throws WrongScoreException{
-        Frame f = new Frame(10,10,true);
+    public void testLastFrameStrikeBonus() throws WrongScoreException{
+        Frame f = new Frame(10,10, Frame.FRAME_TYPE.STRIKE_BONUS);
         int score = f.get_score();
         assertEquals(20,score);
+    }
+
+
+    @Test
+    public void testLastFrameSpareBonus() throws WrongScoreException{
+        Frame f = new Frame(10,0, Frame.FRAME_TYPE.SPARE_BONUS);
+        int score = f.get_score();
+        assertEquals(10,score);
+    }
+
+    @Test
+    public void testGetThrowTypeNormal() throws WrongScoreException {
+        Frame f = new Frame(3,4);
+        Frame.FRAME_TYPE normal = f.get_throw_type();
+        assertEquals(Frame.FRAME_TYPE.NORMAL_THROW,normal);
+    }
+
+
+    @Test(expected = WrongScoreException.class)
+    public void testIllegalThrowTypeNormal() throws WrongScoreException {
+        new Frame(13,4);
+    }
+
+    @Test
+    public void testGetThrowTypeStrikeBonus() throws WrongScoreException {
+        Frame f = new Frame(10,5, Frame.FRAME_TYPE.STRIKE_BONUS);
+        Frame.FRAME_TYPE strike = f.get_throw_type();
+        assertEquals(Frame.FRAME_TYPE.STRIKE_BONUS,strike);
+    }
+
+    @Test(expected = WrongScoreException.class)
+    public void testIllegalThrowTypeStrikeBonus() throws WrongScoreException {
+        new Frame(11,1, Frame.FRAME_TYPE.STRIKE_BONUS);
+    }
+
+    @Test
+    public void testGetThrowTypeSpareBonus() throws WrongScoreException {
+        Frame f = new Frame(10,0, Frame.FRAME_TYPE.SPARE_BONUS);
+        Frame.FRAME_TYPE spare = f.get_throw_type();
+        assertEquals(Frame.FRAME_TYPE.SPARE_BONUS,spare);
+    }
+
+    @Test(expected = WrongScoreException.class)
+    public void testIllegalThrowTypeSpareBonus() throws WrongScoreException {
+        new Frame(7,2, Frame.FRAME_TYPE.SPARE_BONUS);
     }
 }

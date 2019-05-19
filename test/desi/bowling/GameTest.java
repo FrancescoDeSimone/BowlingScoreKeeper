@@ -10,6 +10,31 @@ import static junit.framework.TestCase.assertEquals;
 public class GameTest {
 
     @Test(expected = WrongGameNumberException.class)
+    public void testGameExcessScore() throws WrongScoreException, WrongGameNumberException{
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1),
+                new Frame(1,1)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
     public void testGameFewScore() throws WrongScoreException, WrongGameNumberException{
         ArrayList<Frame> frame = new ArrayList<>();
         frame.addAll(Arrays.asList(
@@ -182,7 +207,7 @@ public class GameTest {
                 new Frame(4,5),
                 new Frame(8,1),
                 new Frame(2,8),
-                new Frame(7,0)
+                new Frame(7,0, Frame.FRAME_TYPE.SPARE_BONUS)
         ));
         Game g = new Game(frame);
         int score = g.game_score();
@@ -203,11 +228,91 @@ public class GameTest {
                 new Frame(4,5),
                 new Frame(8,1),
                 new Frame(10,0),
-                new Frame(7,2)
+                new Frame(7,2, Frame.FRAME_TYPE.STRIKE_BONUS)
         ));
         Game g = new Game(frame);
         int score = g.game_score();
         assertEquals(92,score);
+    }
+
+    @Test
+    public void testAllSpare() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,0, Frame.FRAME_TYPE.SPARE_BONUS)
+        ));
+        Game g = new Game(frame);
+        int score = g.game_score();
+        assertEquals(190,score);
+    }
+
+    @Test(expected = WrongScoreException.class)
+    public void testIllegalLastSpare() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1),
+                new Frame(9,1, Frame.FRAME_TYPE.SPARE_BONUS)
+        ));
+        new Game(frame);
+    }
+
+    @Test
+    public void testStrikeSecondToLast() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(4,1),
+                new Frame(1,1),
+                new Frame(5,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(9,1),
+                new Frame(10,0),
+                new Frame(1,1)
+        ));
+        Game g = new Game(frame);
+        int score = g.game_score();
+        assertEquals(71,score);
+    }
+
+    @Test
+    public void testStrikeInTheMiddle() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(4,1),
+                new Frame(1,1),
+                new Frame(5,1),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(10,0),
+                new Frame(7,1),
+                new Frame(3,1),
+                new Frame(9,1),
+                new Frame(1,1)
+        ));
+        Game g = new Game(frame);
+        int score = g.game_score();
+        assertEquals(68,score);
     }
 
     @Test
@@ -224,11 +329,104 @@ public class GameTest {
                 new Frame(4,5),
                 new Frame(8,1),
                 new Frame(2,8),
-                new Frame(10,0)
+                new Frame(10,0,Frame.FRAME_TYPE.SPARE_BONUS)
         ));
         Game g = new Game(frame);
         int score = g.game_score();
         assertEquals(93,score);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testInvalidBonusThrowNotSpare() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(4,5),
+                new Frame(8,1),
+                new Frame(2,7),
+                new Frame(10,0, Frame.FRAME_TYPE.SPARE_BONUS)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testInvalidBonusThrowNotStrike() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(4,5),
+                new Frame(8,1),
+                new Frame(9,0),
+                new Frame(10,0, Frame.FRAME_TYPE.STRIKE_BONUS)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testScoreStrikeBonusDontThrow() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(4,5),
+                new Frame(8,1),
+                new Frame(10,0)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testScoreSpareBonusDontThrow() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(4,5),
+                new Frame(8,1),
+                new Frame(8,2)
+        ));
+        new Game(frame);
+    }
+
+    @Test(expected = WrongGameNumberException.class)
+    public void testBonusPassAsNormalThrow() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(1,5),
+                new Frame(3,6),
+                new Frame(7,2),
+                new Frame(3,6),
+                new Frame(4,4),
+                new Frame(5,3),
+                new Frame(3,3),
+                new Frame(4,5),
+                new Frame(8,1),
+                new Frame(8,2),
+                new Frame(10,0)
+        ));
+        new Game(frame);
     }
 
     @Test
@@ -245,12 +443,13 @@ public class GameTest {
                 new Frame(10,0),
                 new Frame(10,0),
                 new Frame(10,0),
-                new Frame(10,10,true)
+                new Frame(10,10, Frame.FRAME_TYPE.STRIKE_BONUS)
         ));
         Game g = new Game(frame);
         int score = g.game_score();
         assertEquals(300,score);
     }
+
     @Test
     public void testRealGame() throws WrongScoreException, WrongGameNumberException {
         ArrayList<Frame> frame = new ArrayList<>();
@@ -265,10 +464,31 @@ public class GameTest {
                 new Frame(10,0),
                 new Frame(8,0),
                 new Frame(7,3),
-                new Frame(10,0,true)
+                new Frame(10,0, Frame.FRAME_TYPE.SPARE_BONUS)
         ));
         Game g = new Game(frame);
         int score = g.game_score();
         assertEquals(135,score);
+    }
+
+    @Test
+    public void testStrikeAndSpareInterchange() throws WrongScoreException, WrongGameNumberException {
+        ArrayList<Frame> frame = new ArrayList<>();
+        frame.addAll(Arrays.asList(
+                new Frame(5,5),
+                new Frame(10,0),
+                new Frame(5,5),
+                new Frame(10,0),
+                new Frame(5,5),
+                new Frame(10,0),
+                new Frame(5,5),
+                new Frame(10,0),
+                new Frame(5,5),
+                new Frame(10,0),
+                new Frame(5,5, Frame.FRAME_TYPE.STRIKE_BONUS)
+        ));
+        Game g = new Game(frame);
+        int score = g.game_score();
+        assertEquals(200,score);
     }
 }
