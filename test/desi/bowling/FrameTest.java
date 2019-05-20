@@ -83,6 +83,27 @@ public class FrameTest {
         assertFalse(strike);
     }
 
+    @Test
+    public void testBonusStrikeIsNotSpare() throws WrongScoreException{
+        Frame f = new Frame(7,3, Frame.FRAME_TYPE.STRIKE_BONUS);
+        boolean strike = f.is_strike();
+        assertFalse(strike);
+    }
+
+    @Test
+    public void testBonusStrikeIsNotStrike() throws WrongScoreException{
+        Frame f = new Frame(10,0, Frame.FRAME_TYPE.STRIKE_BONUS);
+        boolean strike = f.is_strike();
+        assertFalse(strike);
+    }
+
+    @Test
+    public void testBonusSpareIsNotStrike() throws WrongScoreException{
+        Frame f = new Frame(10,0, Frame.FRAME_TYPE.SPARE_BONUS);
+        boolean strike = f.is_strike();
+        assertFalse(strike);
+    }
+
 
     @Test
     public void testIsSpare() throws WrongScoreException{
